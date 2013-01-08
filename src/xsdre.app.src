@@ -1,0 +1,10 @@
+{application, xsdre,
+ [
+  {description, "XML Schema regular expression library"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]}
+ ]}.

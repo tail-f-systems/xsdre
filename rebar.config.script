@@ -1,0 +1,71 @@
+%% -*- mode: Erlang -*-
+
+FindLibrary =
+  fun (Name, Dirs) ->
+          SOName = Name ++ ".so",
+          DyLibName = Name ++ ".dylib",
+          lists:filter(
+            fun (Dir) ->
+                    case file:list_dir(Dir) of
+                        {ok, Files} ->
+                            lists:any(
+                              fun (File) ->
+                                      lists:prefix(SOName, File) orelse
+                                          lists:prefix(DyLibName, File)
+                              end, Files);
+                        _ ->
+                            false
+                    end
+            end, Dirs)
+  end.
+
+FindIncludeDir =
+  fun (Name, Dirs) ->
+          lists:filter(
+            fun (Dir) ->
+                    case file:list_dir(Dir) of
+                        {ok, Files} ->
+                            lists:any(
+                              fun (File) when File == Name ->
+                                      {ok, FI} =
+                                          file:read_file_info(
+                                            filename:join(Dir, File)),
+                                      (element(3, FI) == directory);
+                                  (_) ->
+                                      false
+                              end, Files);
+                        _ ->
+                            false
+                    end
+            end, Dirs)
+  end.
+
+Search = ["/usr", "/usr/local", "/opt/local"].
+SearchLib = lists:map(fun (D) -> filename:join([D, "lib"]) end, Search).
+SearchInc = lists:map(fun (D) -> filename:join([D, "include"]) end, Search).
+
+
+%%
+%% Try to find libxml2
+%%
+LibXML2 = FindLibrary("libxml2", SearchLib).
+LibXML2Inc = FindIncludeDir("libxml2", SearchInc).
+
+if
+    LibXML2 == [] ; LibXML2Inc == [] ->
+        io:format("Couldn't find libxml2 (include files and/or library) in: "
+                  "~p\n", [Search]),
+        exit(error);
+    true ->
+        ok
+end.
+
+%%
+%% Resulting rebar.config
+%%
+[
+  {port_env,
+     [{"CFLAGS", "$CFLAGS -I" ++ filename:join(hd(LibXML2Inc), "libxml2")}
+      ,{"LDFLAGS", "$LDFLAGS -L" ++ hd(LibXML2) ++ " -lxml2"}
+     ]}
+].
