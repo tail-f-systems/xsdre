@@ -90,7 +90,7 @@ on_load() ->
             Path ->
                 Path
         end,
-    NifFile = filename:join(PrivDir, lists:concat([?MODULE, "_drv"])),
+    NifFile = filename:join(PrivDir, lists:concat([?MODULE, "_nif"])),
     erlang:load_nif(NifFile, 0).
 
 nif_only() ->

@@ -1,5 +1,7 @@
 %% -*- mode: Erlang -*-
 
+App = "xsdre".
+
 FindLibrary =
   fun (Name, Dirs) ->
           SOName = Name ++ ".so",
@@ -71,8 +73,11 @@ LibXML2LibDir =
 %% Resulting rebar.config
 %%
 [
-  {port_env,
-     [{"CFLAGS", "$CFLAGS -I" ++ filename:join(hd(LibXML2Inc), "libxml2")}
-      ,{"LDFLAGS", "$LDFLAGS" ++ LibXML2LibDir  ++ " -lxml2"}
-     ]}
+ {port_env,
+  [{"CFLAGS", "$CFLAGS -I" ++ filename:join(hd(LibXML2Inc), "libxml2")}
+   ,{"LDFLAGS", "$LDFLAGS" ++ LibXML2LibDir  ++ " -lxml2"}
+  ]}
+ ,
+ {port_specs, [{filename:join("priv", App ++ "_nif.so"),
+                [filename:join("c_src", App ++ ".c")]}]}
 ].
