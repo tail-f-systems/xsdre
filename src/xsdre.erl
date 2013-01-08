@@ -1,14 +1,15 @@
 %%% ------------------------------------------------------------------------
 %%% @copyright 2011,2012,2013 Tail-f Systems AB
-%%% @doc XML Schema regular expression library.
+%%% @doc XML Schema Definition Regular Expression Library.
 %%%
 %%% This library implements
 %%% <a href="http://www.w3.org/TR/2012/REC-xmlschema11-2-20120405/#regexs">
-%%% W3C XML Schema regular expressions </a>, using NIF:s towards the
-%%% regular expression functions in
+%%% W3C XML Schema regular expression</a> functionality. It is
+%%% implemented with NIF:s that use the regular expression functions in
 %%% <a href="http://www.xmlsoft.org/html/libxml-xmlregexp.html">libxml2</a>.
+%%%
 %%% For a good summary of the difference between different regular
-%%% expression implementation see,
+%%% expression implementations see,
 %%% [http://www.regular-expressions.info/refflavors.html].
 %%%
 %%% @end
