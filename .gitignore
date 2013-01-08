@@ -1,3 +1,4 @@
+doc/*
 ebin/*
 priv/*
 c_src/*.o
