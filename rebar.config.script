@@ -52,13 +52,20 @@ LibXML2 = FindLibrary("libxml2", SearchLib).
 LibXML2Inc = FindIncludeDir("libxml2", SearchInc).
 
 if
-    LibXML2 == [] ; LibXML2Inc == [] ->
-        io:format("Couldn't find libxml2 (include files and/or library) in: "
-                  "~p\n", [Search]),
+    LibXML2Inc == [] ->
+        io:format("Couldn't find libxml2 include files in: ~p\n", [Search]),
         exit(error);
     true ->
         ok
 end.
+
+LibXML2LibDir =
+  if
+      LibXML2 == [] ->
+          "";
+      true ->
+          " -L" ++ hd(LibXML2)
+  end.
 
 %%
 %% Resulting rebar.config
@@ -66,6 +73,6 @@ end.
 [
   {port_env,
      [{"CFLAGS", "$CFLAGS -I" ++ filename:join(hd(LibXML2Inc), "libxml2")}
-      ,{"LDFLAGS", "$LDFLAGS -L" ++ hd(LibXML2) ++ " -lxml2"}
+      ,{"LDFLAGS", "$LDFLAGS" ++ LibXML2LibDir  ++ " -lxml2"}
      ]}
 ].
